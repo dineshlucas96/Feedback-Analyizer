@@ -30,6 +30,16 @@ export function processRawData(
       ? row[mapping.sectionCol].trim()
       : 'A';
 
+    const contentRatingRaw = mapping.contentRatingCol ? row[mapping.contentRatingCol] : undefined;
+    const contentRating = !isNaN(parseRating(contentRatingRaw)) ? parseRating(contentRatingRaw) : undefined;
+
+    const speakerRatingRaw = mapping.speakerRatingCol ? row[mapping.speakerRatingCol] : undefined;
+    const speakerRating = !isNaN(parseRating(speakerRatingRaw)) ? parseRating(speakerRatingRaw) : undefined;
+
+    const futureSuggestion = mapping.suggestionCol && row[mapping.suggestionCol]?.trim()
+      ? row[mapping.suggestionCol].trim()
+      : undefined;
+
     const timestamp = mapping.timestampCol && row[mapping.timestampCol]?.trim()
       ? row[mapping.timestampCol].trim()
       : undefined;
@@ -60,6 +70,9 @@ export function processRawData(
       department,
       className,
       section,
+      contentRating,
+      speakerRating,
+      futureSuggestion,
       ratings,
       averageRating,
       comments,

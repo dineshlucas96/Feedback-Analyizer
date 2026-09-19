@@ -19,6 +19,8 @@ import { Dashboard } from './pages/Dashboard';
 import { Feedback } from './pages/Feedback';
 import { Questions } from './pages/Questions';
 import { Classes } from './pages/Classes';
+import { Ratings } from './pages/Ratings';
+import { Suggestions } from './pages/Suggestions';
 import { RawData } from './pages/RawData';
 
 export function App() {
@@ -61,6 +63,9 @@ export function App() {
     questionPerformance,
     sectionComparison,
     classSummaries,
+    contentRatingStats,
+    speakerRatingStats,
+    futureSuggestions,
     availableDepartments,
     availableClasses,
     availableSections,
@@ -120,6 +125,10 @@ export function App() {
                       questionPerformance={questionPerformance}
                       sectionComparison={sectionComparison}
                       onSelectQuestion={setSelectedQuestion}
+                      contentRatingStats={contentRatingStats}
+                      speakerRatingStats={speakerRatingStats}
+                      futureSuggestions={futureSuggestions}
+                      onNavigateTab={setActiveTab}
                     />
                   )}
 
@@ -161,6 +170,42 @@ export function App() {
                   {activeTab === 'classes' && (
                     <Classes
                       classSummaries={classSummaries}
+                      filters={filters}
+                      availableDepartments={availableDepartments}
+                      availableClasses={availableClasses}
+                      availableSections={availableSections}
+                      activePills={activePills}
+                      hasActiveFilters={hasActiveFilters}
+                      onDepartmentChange={setDepartment}
+                      onClassChange={setClassName}
+                      onSectionChange={setSection}
+                      onResetFilters={resetFilters}
+                      onRemovePill={removeFilter}
+                    />
+                  )}
+
+                  {activeTab === 'ratings' && (
+                    <Ratings
+                      records={filteredRecords}
+                      contentRatingStats={contentRatingStats}
+                      speakerRatingStats={speakerRatingStats}
+                      filters={filters}
+                      availableDepartments={availableDepartments}
+                      availableClasses={availableClasses}
+                      availableSections={availableSections}
+                      activePills={activePills}
+                      hasActiveFilters={hasActiveFilters}
+                      onDepartmentChange={setDepartment}
+                      onClassChange={setClassName}
+                      onSectionChange={setSection}
+                      onResetFilters={resetFilters}
+                      onRemovePill={removeFilter}
+                    />
+                  )}
+
+                  {activeTab === 'suggestions' && (
+                    <Suggestions
+                      suggestions={futureSuggestions}
                       filters={filters}
                       availableDepartments={availableDepartments}
                       availableClasses={availableClasses}

@@ -4,6 +4,9 @@ export interface FeedbackRecord {
   department: string;
   className: string;
   section: string;
+  contentRating?: number;
+  speakerRating?: number;
+  futureSuggestion?: string;
   ratings: Record<string, number>; // key: question label, value: 1-5
   averageRating: number; // average rating across questions in this record
   comments?: string;
@@ -20,6 +23,9 @@ export interface ColumnMapping {
   departmentCol: string | null;
   classCol: string | null;
   sectionCol: string | null;
+  contentRatingCol: string | null;
+  speakerRatingCol: string | null;
+  suggestionCol: string | null;
   timestampCol: string | null;
   commentsCol: string | null;
   questionCols: string[];
@@ -54,6 +60,26 @@ export interface QuestionPerformanceItem {
   distribution: { star: number; count: number; percentage: number }[];
 }
 
+export interface RatingBreakdownItem {
+  star: number;
+  count: number;
+  percentage: number;
+}
+
+export interface RatingAspectStats {
+  average: number;
+  count: number;
+  positiveRate: number;
+  distribution: RatingBreakdownItem[];
+}
+
+export interface FutureSuggestionItem {
+  text: string;
+  department: string;
+  className: string;
+  section: string;
+}
+
 export interface SectionComparisonItem {
   sectionKey: string;
   department: string;
@@ -80,4 +106,4 @@ export interface SpreadsheetSource {
   lastLoadedAt: string;
 }
 
-export type ActiveTab = 'overview' | 'feedback' | 'questions' | 'classes' | 'raw';
+export type ActiveTab = 'overview' | 'feedback' | 'questions' | 'classes' | 'ratings' | 'suggestions' | 'raw';

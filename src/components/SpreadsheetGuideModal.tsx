@@ -84,8 +84,16 @@ export const SpreadsheetGuideModal: React.FC<SpreadsheetGuideModalProps> = ({
                 <span className="text-gray-500">Teaching clarity, Knowledge, Doubt solving (1–5 ratings or text)</span>
               </div>
               <div className="p-2.5 rounded-lg bg-gray-50 border border-gray-100">
+                <span className="font-semibold text-gray-900 block">Content & Speaker Rating</span>
+                <span className="text-gray-500">"Content Rating", "Speaker Rating" (1–5 ratings)</span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-gray-50 border border-gray-100">
                 <span className="font-semibold text-gray-900 block">Qualitative Feedback</span>
-                <span className="text-gray-500">Comments, Suggestions, Remarks</span>
+                <span className="text-gray-500">Comments, Suggestions, Future Suggestions, Remarks</span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-gray-50 border border-gray-100">
+                <span className="font-semibold text-gray-900 block">Metadata</span>
+                <span className="text-gray-500">Timestamp (optional)</span>
               </div>
             </div>
           </div>

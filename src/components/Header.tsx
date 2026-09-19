@@ -33,6 +33,14 @@ const TAB_TITLES: Record<ActiveTab, { title: string; subtitle: string }> = {
     title: 'Class & Section Analysis',
     subtitle: 'Comparative breakdown across academic years and sections',
   },
+  ratings: {
+    title: 'Content & Speaker Rating',
+    subtitle: 'How well the material and the presenter were received',
+  },
+  suggestions: {
+    title: 'Future Suggestions',
+    subtitle: 'Actionable ideas and recommendations from respondents',
+  },
   raw: {
     title: 'Raw Data',
     subtitle: 'Searchable, sortable tabular view of all spreadsheet rows',

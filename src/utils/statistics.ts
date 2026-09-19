@@ -1,9 +1,11 @@
 import type {
   ClassAnalysisItem,
   FeedbackRecord,
+  FutureSuggestionItem,
   KPIData,
   QuestionMeta,
   QuestionPerformanceItem,
+  RatingAspectStats,
   RatingDistributionItem,
   SectionComparisonItem,
 } from '../types/feedback';
@@ -191,4 +193,71 @@ export function calculateClassSummaries(records: FeedbackRecord[]): ClassAnalysi
   });
 
   return result.sort((a, b) => b.averageRating - a.averageRating);
+}
+
+function buildRatingBreakdown(
+  values: number[],
+): { star: number; count: number; percentage: number }[] {
+  const counts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  let total = 0;
+
+  values.forEach(v => {
+    const rounded = Math.min(5, Math.max(1, Math.round(v)));
+    counts[rounded] = (counts[rounded] || 0) + 1;
+    total++;
+  });
+
+  return [5, 4, 3, 2, 1].map(star => ({
+    star,
+    count: counts[star] || 0,
+    percentage: total > 0 ? Number((((counts[star] || 0) / total) * 100).toFixed(1)) : 0,
+  }));
+}
+
+function calculateAspectStats(values: number[]): RatingAspectStats {
+  if (values.length === 0) {
+    return {
+      average: 0,
+      count: 0,
+      positiveRate: 0,
+      distribution: [5, 4, 3, 2, 1].map(star => ({ star, count: 0, percentage: 0 })),
+    };
+  }
+
+  const sum = values.reduce((acc, v) => acc + v, 0);
+  const positiveCount = values.filter(v => v >= 4.0).length;
+
+  return {
+    average: Number((sum / values.length).toFixed(2)),
+    count: values.length,
+    positiveRate: Number(((positiveCount / values.length) * 100).toFixed(1)),
+    distribution: buildRatingBreakdown(values),
+  };
+}
+
+export function calculateContentRatingStats(records: FeedbackRecord[]): RatingAspectStats {
+  return calculateAspectStats(
+    records.filter(r => r.contentRating !== undefined).map(r => r.contentRating as number)
+  );
+}
+
+export function calculateSpeakerRatingStats(records: FeedbackRecord[]): RatingAspectStats {
+  return calculateAspectStats(
+    records.filter(r => r.speakerRating !== undefined).map(r => r.speakerRating as number)
+  );
+}
+
+export function collectFutureSuggestions(records: FeedbackRecord[]): FutureSuggestionItem[] {
+  const result: FutureSuggestionItem[] = [];
+  records.forEach(r => {
+    if (r.futureSuggestion && r.futureSuggestion.trim().length > 0) {
+      result.push({
+        text: r.futureSuggestion.trim(),
+        department: r.department,
+        className: r.className,
+        section: r.section,
+      });
+    }
+  });
+  return result.sort((a, b) => a.text.localeCompare(b.text));
 }

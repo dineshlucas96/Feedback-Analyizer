@@ -9,10 +9,13 @@ import {
 } from '../utils/filters';
 import {
   calculateClassSummaries,
+  calculateContentRatingStats,
   calculateKPIs,
   calculateQuestionPerformance,
   calculateRatingDistribution,
   calculateSectionComparison,
+  calculateSpeakerRatingStats,
+  collectFutureSuggestions,
 } from '../utils/statistics';
 
 export function useFeedbackData(
@@ -62,6 +65,21 @@ export function useFeedbackData(
     [filteredRecords]
   );
 
+  const contentRatingStats = useMemo(
+    () => calculateContentRatingStats(filteredRecords),
+    [filteredRecords]
+  );
+
+  const speakerRatingStats = useMemo(
+    () => calculateSpeakerRatingStats(filteredRecords),
+    [filteredRecords]
+  );
+
+  const futureSuggestions = useMemo(
+    () => collectFutureSuggestions(filteredRecords),
+    [filteredRecords]
+  );
+
   return {
     filteredRecords,
     kpis,
@@ -69,6 +87,9 @@ export function useFeedbackData(
     questionPerformance,
     sectionComparison,
     classSummaries,
+    contentRatingStats,
+    speakerRatingStats,
+    futureSuggestions,
     availableDepartments,
     availableClasses,
     availableSections,

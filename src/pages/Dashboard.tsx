@@ -13,10 +13,16 @@ import { FilterBar } from '../components/FilterBar';
 import { KPICards } from '../components/KPICards';
 import { ChartCard } from '../components/ChartCard';
 import { EmptyState } from '../components/EmptyState';
+import { RatingSection } from '../components/RatingSection';
+import { SuggestionCard } from '../components/SuggestionCard';
+import { BookMarked, Mic2, ArrowRight } from 'lucide-react';
 import type {
+  ActiveTab,
   FilterState,
+  FutureSuggestionItem,
   KPIData,
   QuestionPerformanceItem,
+  RatingAspectStats,
   RatingDistributionItem,
   SectionComparisonItem,
 } from '../types/feedback';
@@ -39,7 +45,11 @@ interface DashboardProps {
   ratingDistribution: RatingDistributionItem[];
   questionPerformance: QuestionPerformanceItem[];
   sectionComparison: SectionComparisonItem[];
+  contentRatingStats: RatingAspectStats;
+  speakerRatingStats: RatingAspectStats;
+  futureSuggestions: FutureSuggestionItem[];
   onSelectQuestion: (question: QuestionPerformanceItem) => void;
+  onNavigateTab: (tab: ActiveTab) => void;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
@@ -58,7 +68,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
   ratingDistribution,
   questionPerformance,
   sectionComparison,
+  contentRatingStats,
+  speakerRatingStats,
+  futureSuggestions,
   onSelectQuestion,
+  onNavigateTab,
 }) => {
   if (kpis.totalResponses === 0) {
     return (
@@ -294,6 +308,75 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
           )}
         </ChartCard>
+      </div>
+
+      {/* Content & Speaker Rating Sections */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <RatingSection
+          title="Content Rating"
+          subtitle="Evaluation of the session material and subject matter"
+          stats={contentRatingStats}
+          icon={<BookMarked className="w-4 h-4" />}
+          accentClass="bg-blue-50 text-blue-600"
+          barClass="bg-blue-500"
+          action={
+            <button
+              onClick={() => onNavigateTab('ratings')}
+              className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600 hover:text-indigo-700 transition-colors cursor-pointer"
+            >
+              <span>View all</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          }
+        />
+        <RatingSection
+          title="Speaker Rating"
+          subtitle="Evaluation of the presenter's delivery and clarity"
+          stats={speakerRatingStats}
+          icon={<Mic2 className="w-4 h-4" />}
+          accentClass="bg-emerald-50 text-emerald-600"
+          barClass="bg-emerald-500"
+          action={
+            <button
+              onClick={() => onNavigateTab('ratings')}
+              className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600 hover:text-indigo-700 transition-colors cursor-pointer"
+            >
+              <span>View all</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          }
+        />
+      </div>
+
+      {/* Future Suggestions Section */}
+      <div className="bg-white rounded-xl border border-[#E5E7EB] p-5 shadow-2xs">
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <h2 className="text-base font-semibold text-[#111827] tracking-tight">Future Suggestions</h2>
+            <p className="text-xs text-[#6B7280] mt-0.5">
+              Actionable ideas and recommendations from respondents
+            </p>
+          </div>
+          <button
+            onClick={() => onNavigateTab('suggestions')}
+            className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600 hover:text-indigo-700 transition-colors cursor-pointer"
+          >
+            <span>View all</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        {futureSuggestions.length === 0 ? (
+          <div className="flex items-center justify-center h-40 text-xs text-gray-400 italic">
+            No future suggestions recorded in the current selection.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {futureSuggestions.slice(0, 6).map((suggestion, idx) => (
+              <SuggestionCard key={`${suggestion.text}_${idx}`} suggestion={suggestion} index={idx} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

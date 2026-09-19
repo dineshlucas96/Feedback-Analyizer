@@ -98,6 +98,9 @@ export function detectColumnMapping(headers: string[], sampleRows: Record<string
     departmentCol: null,
     classCol: null,
     sectionCol: null,
+    contentRatingCol: null,
+    speakerRatingCol: null,
+    suggestionCol: null,
     timestampCol: null,
     commentsCol: null,
     questionCols: [],
@@ -106,8 +109,11 @@ export function detectColumnMapping(headers: string[], sampleRows: Record<string
   const departmentAliases = ['department', 'dept', 'department name', 'branch', 'discipline', 'course stream'];
   const classAliases = ['class', 'year', 'class year', 'academic year', 'batch', 'semester', 'sem', 'study year'];
   const sectionAliases = ['section', 'sec', 'division', 'div', 'group'];
+  const contentRatingAliases = ['content rating', 'content', 'content quality', 'rating of content', 'rating on content', 'content relevance', 'material rating'];
+  const speakerRatingAliases = ['speaker rating', 'speaker', 'speaker quality', 'presenter rating', 'rating of speaker', 'delivery rating', 'presentation skills rating'];
+  const suggestionAliases = ['future suggestion', 'future suggestions', 'suggestions', 'suggestion', 'suggestions for improvement', 'suggestions for the future', 'suggestions for future', 'future improvements', 'any suggestions', 'improvement suggestions', 'recommendations'];
   const timestampAliases = ['timestamp', 'date', 'submitted at', 'submitted date', 'time', 'created at', 'submission time'];
-  const commentAliases = ['comments', 'comment', 'feedback', 'student comments', 'suggestions', 'remarks', 'any comments', 'student feedback', 'suggestions for improvement', 'overall comments'];
+  const commentAliases = ['comments', 'comment', 'feedback', 'student comments', 'remarks', 'any comments', 'student feedback', 'overall comments'];
 
   // Helper matcher
   const findMatch = (aliases: string[], excluded: string[]): string | null => {
@@ -138,6 +144,18 @@ export function detectColumnMapping(headers: string[], sampleRows: Record<string
   // Match Section
   mapping.sectionCol = findMatch(sectionAliases, allocated);
   if (mapping.sectionCol) allocated.push(mapping.sectionCol);
+
+  // Match Content Rating
+  mapping.contentRatingCol = findMatch(contentRatingAliases, allocated);
+  if (mapping.contentRatingCol) allocated.push(mapping.contentRatingCol);
+
+  // Match Speaker Rating
+  mapping.speakerRatingCol = findMatch(speakerRatingAliases, allocated);
+  if (mapping.speakerRatingCol) allocated.push(mapping.speakerRatingCol);
+
+  // Match Future Suggestions
+  mapping.suggestionCol = findMatch(suggestionAliases, allocated);
+  if (mapping.suggestionCol) allocated.push(mapping.suggestionCol);
 
   // Match Timestamp
   mapping.timestampCol = findMatch(timestampAliases, allocated);

@@ -4,6 +4,8 @@ import {
   MessageSquareText,
   BarChart3,
   GraduationCap,
+  Presentation,
+  Lightbulb,
   Table,
   Sparkles,
   Sheet,
@@ -34,6 +36,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'feedback' as ActiveTab, label: 'Feedback', icon: MessageSquareText },
     { id: 'questions' as ActiveTab, label: 'Questions', icon: BarChart3 },
     { id: 'classes' as ActiveTab, label: 'Classes', icon: GraduationCap },
+    { id: 'ratings' as ActiveTab, label: 'Content & Speaker', icon: Presentation },
+    { id: 'suggestions' as ActiveTab, label: 'Suggestions', icon: Lightbulb },
     { id: 'raw' as ActiveTab, label: 'Raw Data', icon: Table },
   ];
 

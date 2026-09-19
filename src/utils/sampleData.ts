@@ -13,6 +13,9 @@ export const SAMPLE_COLUMN_MAPPING: ColumnMapping = {
   departmentCol: 'Department',
   classCol: 'Class / Year',
   sectionCol: 'Section',
+  contentRatingCol: 'Content Rating',
+  speakerRatingCol: 'Speaker Rating',
+  suggestionCol: 'Future Suggestions',
   timestampCol: 'Timestamp',
   commentsCol: 'Student Feedback & Comments',
   questionCols: SAMPLE_QUESTIONS.map(q => q.columnName),
@@ -22,6 +25,8 @@ interface CohortAssignment {
   department: string;
   classes: string[];
   baseRating: number; // 3.8 to 4.9
+  contentBase: number;
+  speakerBase: number;
 }
 
 const COHORT_LIST: CohortAssignment[] = [
@@ -29,41 +34,57 @@ const COHORT_LIST: CohortAssignment[] = [
     department: 'AIDS',
     classes: ['II Year', 'III Year'],
     baseRating: 4.75,
+    contentBase: 4.7,
+    speakerBase: 4.8,
   },
   {
     department: 'AIDS',
     classes: ['II Year', 'IV Year'],
     baseRating: 4.55,
+    contentBase: 4.6,
+    speakerBase: 4.5,
   },
   {
     department: 'CSE',
     classes: ['II Year', 'III Year'],
     baseRating: 4.62,
+    contentBase: 4.5,
+    speakerBase: 4.7,
   },
   {
     department: 'CSE',
     classes: ['III Year', 'IV Year'],
     baseRating: 4.38,
+    contentBase: 4.4,
+    speakerBase: 4.3,
   },
   {
     department: 'ECE',
     classes: ['III Year'],
     baseRating: 4.22,
+    contentBase: 4.1,
+    speakerBase: 4.3,
   },
   {
     department: 'ECE',
     classes: ['II Year', 'IV Year'],
     baseRating: 4.68,
+    contentBase: 4.7,
+    speakerBase: 4.6,
   },
   {
     department: 'IT',
     classes: ['II Year', 'III Year'],
     baseRating: 4.45,
+    contentBase: 4.5,
+    speakerBase: 4.4,
   },
   {
     department: 'Mechanical',
     classes: ['III Year', 'IV Year'],
     baseRating: 4.15,
+    contentBase: 4.0,
+    speakerBase: 4.2,
   },
 ];
 
@@ -87,6 +108,21 @@ const CONSTRUCTIVE_COMMENTS = [
   'Doubt clearing at the end of class could use an extra 5 minutes.',
   'Audio clarity in the back rows could be improved during slide presentations.',
   'Good overall, but could explain more previous year exam problems.',
+];
+
+const FUTURE_SUGGESTIONS = [
+  'Please add more coding projects to the lab sessions so we can apply the concepts.',
+  'Kindly share the lecture slides and notes a day before the class for better preparation.',
+  'It would help if weekly doubt-clearing slots are scheduled apart from regular classes.',
+  'Include more real-world case studies and industry examples in the upcoming sessions.',
+  'Requesting placement-oriented training and aptitude practice integrated into the schedule.',
+  'Please record the sessions and upload them for students who miss a class.',
+  'Add more interactive quizzes and group activities to make the sessions engaging.',
+  'Could you share previous year question papers and model answers for practice?',
+  'Include guest lectures from industry professionals in the coming months.',
+  'Please slow down during the mathematics-heavy derivations and repeat key steps.',
+  'More lab hardware kits should be available so every student gets hands-on time.',
+  'Schedule regular feedback discussions after each unit to track understanding.',
 ];
 
 /**
@@ -143,6 +179,18 @@ export function generateSampleFeedback(): FeedbackRecord[] {
 
           const averageRating = Number((ratingSum / SAMPLE_QUESTIONS.length).toFixed(2));
 
+          // Generate content and speaker ratings around cohort bases
+          const contentRaw = Math.round(Math.min(5, Math.max(1, cohort.contentBase + (seededRandom(seed++) - 0.45) * 1.5)));
+          const speakerRaw = Math.round(Math.min(5, Math.max(1, cohort.speakerBase + (seededRandom(seed++) - 0.45) * 1.5)));
+
+          // Generate a future suggestion for approx 30% of records
+          let suggestion: string | undefined = undefined;
+          const suggestionRand = seededRandom(seed++);
+          if (suggestionRand > 0.7) {
+            const sIdx = Math.floor(seededRandom(seed++) * FUTURE_SUGGESTIONS.length);
+            suggestion = FUTURE_SUGGESTIONS[sIdx];
+          }
+
           // Generate comments for approx 45% of records
           let comment: string | undefined = undefined;
           const commentRand = seededRandom(seed++);
@@ -164,6 +212,9 @@ export function generateSampleFeedback(): FeedbackRecord[] {
             'Class / Year': cls,
             Section: section,
             Timestamp: timestamp,
+            'Content Rating': String(contentRaw),
+            'Speaker Rating': String(speakerRaw),
+            'Future Suggestions': suggestion || '',
             'Student Feedback & Comments': comment || '',
           };
 
@@ -179,6 +230,9 @@ export function generateSampleFeedback(): FeedbackRecord[] {
             section,
             ratings,
             averageRating,
+            contentRating: contentRaw,
+            speakerRating: speakerRaw,
+            futureSuggestion: suggestion,
             comments: comment,
             raw: rawRow,
           });
